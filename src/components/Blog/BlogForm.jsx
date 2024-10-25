@@ -9,7 +9,7 @@ const BlogForm = () => {
     const [image, setImage] = useState(null);
     const [error, setError] = useState('');
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     // Formik form state and validation
     const formik = useFormik({
@@ -39,17 +39,12 @@ const BlogForm = () => {
                 resetForm();
                 setImage(null);
                 setError('');
-
-                navigate('/')
-
+                navigate('/');
             } catch (err) {
                 if (err.response && err.response.data) {
-                    console.log(err);
-                    
                     const serverError = err.response.data.detail || 'Title already exists, please check it out';
                     setError(serverError);
                 } else {
-                    // Handle any unexpected errors
                     setError('An unexpected error occurred. Please try again.');
                 }
             }
@@ -58,55 +53,66 @@ const BlogForm = () => {
 
     return (
         <>
-        <Navbar />
-        
-        <form onSubmit={formik.handleSubmit} className="max-w-2xl mx-auto p-4">
-            {error && <div className="text-red-500 mb-4">{error}</div>}
-            <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Title</label>
-                <input
-                    type="text"
-                    name="title"
-                    value={formik.values.title}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border rounded"
-                    required
-                />
-                {formik.touched.title && formik.errors.title ? (
-                    <div className="text-red-500 mt-2">{formik.errors.title}</div>
-                ) : null}
+            <Navbar />
+
+            <div className="max-w-4xl mx-auto py-10 px-5 md:px-8 lg:px-10">
+                <h1 className="text-3xl font-bold text-center text-blue-600 mb-8">Create a New Blog</h1>
+
+                {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
+
+                <form onSubmit={formik.handleSubmit} className="bg-white shadow-md rounded-lg px-8 py-8">
+                    <div className="mb-6">
+                        <label className="block text-lg text-gray-800 font-semibold mb-2">Title</label>
+                        <input
+                            type="text"
+                            name="title"
+                            value={formik.values.title}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className={`w-full p-3 border ${formik.errors.title && formik.touched.title ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:border-blue-500`}
+                            placeholder="Enter your blog title"
+                        />
+                        {formik.touched.title && formik.errors.title && (
+                            <p className="text-red-500 text-sm mt-2">{formik.errors.title}</p>
+                        )}
+                    </div>
+
+                    <div className="mb-6">
+                        <label className="block text-lg text-gray-800 font-semibold mb-2">Content</label>
+                        <textarea
+                            name="content"
+                            value={formik.values.content}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className={`w-full p-3 border ${formik.errors.content && formik.touched.content ? 'border-red-500' : 'border-gray-300'} rounded-md focus:outline-none focus:border-blue-500`}
+                            placeholder="Write your blog content"
+                            rows="6"
+                        />
+                        {formik.touched.content && formik.errors.content && (
+                            <p className="text-red-500 text-sm mt-2">{formik.errors.content}</p>
+                        )}
+                    </div>
+
+                    <div className="mb-6">
+                        <label className="block text-lg text-gray-800 font-semibold mb-2">Upload Image</label>
+                        <input
+                            type="file"
+                            onChange={(e) => setImage(e.target.files[0])}
+                            accept="image/*"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                        />
+                    </div>
+
+                    <div className="flex justify-center">
+                        <button
+                            type="submit"
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300"
+                        >
+                            Submit Blog
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Content</label>
-                <textarea
-                    name="content"
-                    value={formik.values.content}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border rounded h-48"
-                    required
-                />
-                {formik.touched.content && formik.errors.content ? (
-                    <div className="text-red-500 mt-2">{formik.errors.content}</div>
-                ) : null}
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 mb-2">Image</label>
-                <input
-                    type="file"
-                    onChange={(e) => setImage(e.target.files[0])}
-                    accept="image/*"
-                    className="w-full"
-                />
-            </div>
-            <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-                Create Blog
-            </button>
-        </form>
         </>
     );
 };
