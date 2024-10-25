@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import api from '../../services/api';
 import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar';
 
 const BlogForm = () => {
     const [image, setImage] = useState(null);
@@ -42,12 +43,23 @@ const BlogForm = () => {
                 navigate('/')
 
             } catch (err) {
-                setError('An error occurred while creating the blog');
+                if (err.response && err.response.data) {
+                    console.log(err);
+                    
+                    const serverError = err.response.data.detail || 'Title already exists, please check it out';
+                    setError(serverError);
+                } else {
+                    // Handle any unexpected errors
+                    setError('An unexpected error occurred. Please try again.');
+                }
             }
         },
     });
 
     return (
+        <>
+        <Navbar />
+        
         <form onSubmit={formik.handleSubmit} className="max-w-2xl mx-auto p-4">
             {error && <div className="text-red-500 mb-4">{error}</div>}
             <div className="mb-4">
@@ -95,6 +107,7 @@ const BlogForm = () => {
                 Create Blog
             </button>
         </form>
+        </>
     );
 };
 

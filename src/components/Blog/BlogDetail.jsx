@@ -5,6 +5,7 @@ import api from '../../services/api';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../redux/actions/userActions';
 import EditBlog from './EditBlog';
+import Navbar from './Navbar';
 
 const BlogDetail = () => {
     const [blog, setBlog] = useState(null);
@@ -54,6 +55,8 @@ const BlogDetail = () => {
     if (error) return <div>{error}</div>;
   
     return (
+      <>
+        <Navbar />
       <div className="max-w-4xl mx-auto p-4">
         {!edit ?(
         <>
@@ -98,6 +101,7 @@ const BlogDetail = () => {
            <EditBlog id={slug} closeEdit={setEdit} />  
         ):null} */}
       </div>
+      </>
   )
 }
 
