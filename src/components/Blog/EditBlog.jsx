@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription } from '../ui/Alert';
 import api from '../../services/api';
+import ImageUpload from '../../utils/cloudinary';
 
 const EditBlog = ({ id, closeEdit }) => {  // Accept closeEdit as a prop
   const navigate = useNavigate();
@@ -41,7 +42,9 @@ const EditBlog = ({ id, closeEdit }) => {  // Accept closeEdit as a prop
     formData.append('title', title);
     formData.append('content', content);
     if (image) {
-      formData.append('image', image);
+      const imageUrl = await ImageUpload(image);
+      
+      formData.append('image', imageUrl);
     }
 
     try {

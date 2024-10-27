@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import api from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
+import ImageUpload from '../../utils/cloudinary';
 
 const BlogForm = () => {
     const [image, setImage] = useState(null);
@@ -29,11 +30,14 @@ const BlogForm = () => {
             const formData = new FormData();
             formData.append('title', values.title);
             formData.append('content', values.content);
-            if (image) {
-                formData.append('image', image);
-            }
 
             try {
+                // If image is provided, upload it to Cloudinary first
+                if (image) {
+                    const imageUrl = await ImageUpload(image);
+                    formData.append('image', imageUrl);
+                }
+
                 await api.post(`api/blogs/`, formData);
                 // Clear form on success
                 resetForm();
@@ -107,7 +111,7 @@ const BlogForm = () => {
                         <button
                             type="submit"
                             className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300"
-                        >
+                        >   
                             Submit Blog
                         </button>
                     </div>
