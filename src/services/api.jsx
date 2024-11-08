@@ -1,9 +1,9 @@
-export const URL = "http://127.0.0.1:8000";
+export const URL = "https://blogmanger-production.up.railway.app";
 
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8000/',
+    baseURL: 'https://blogmanger-production.up.railway.app/',
 });
 
 // Optional: You can set up interceptors here for adding tokens to requests

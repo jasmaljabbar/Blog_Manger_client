@@ -118,7 +118,7 @@ export const updateToken = createAsyncThunk(
             }
 
             const refreshToken = user.refresh;
-            console.log(refreshToken);
+            
             
             const config = {
                 headers: {
@@ -128,7 +128,7 @@ export const updateToken = createAsyncThunk(
 
             // Sending the refresh token in the request body
             const response = await axios.post(`${URL}/token/refresh/`, { refresh: refreshToken });
-            console.log(response);
+           
             
             // Return the response data
             return response.data;

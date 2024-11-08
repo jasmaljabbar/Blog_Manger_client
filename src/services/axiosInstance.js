@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { logout, updateToken } from '../redux/actions/userActions';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8000/',
+    baseURL: 'https://blogmanger-production.up.railway.app/',
 });
 
 const useAxiosInstance = () => {

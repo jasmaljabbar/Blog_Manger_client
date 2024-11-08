@@ -9,9 +9,7 @@ const ImageUpload = async (image) => {
     formData.append('upload_preset', preset_key);
 
     try {
-        console.log('file uploading');
         const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData);
-        console.log('image uploaded successfully :',res);
         const { format, secure_url } = res.data;
 
         if (['png', 'jpeg', 'jpg'].includes(format)) {
