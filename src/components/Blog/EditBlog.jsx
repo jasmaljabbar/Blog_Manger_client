@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription } from '../ui/Alert';
-import api from '../../services/api';
 import ImageUpload from '../../utils/cloudinary';
+import useAxiosInstance from '../../services/axiosInstance';
 
 const EditBlog = ({ id, closeEdit }) => {  // Accept closeEdit as a prop
   const navigate = useNavigate();
@@ -15,10 +15,13 @@ const EditBlog = ({ id, closeEdit }) => {  // Accept closeEdit as a prop
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState('');
 
+  const axiosInstance = useAxiosInstance()
+
+
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const response = await api.get(`/api/blogs/${id}/`);
+        const response = await axiosInstance.get(`/api/blogs/${id}/`);
         setTitle(response.data.title);
         setContent(response.data.content);
         setCurrentImage(response.data.image);
@@ -48,7 +51,7 @@ const EditBlog = ({ id, closeEdit }) => {  // Accept closeEdit as a prop
     }
 
     try {
-      await api.put(`/api/blogs/${id}/`, formData);
+      await axiosInstance.put(`/api/blogs/${id}/`, formData);
       setSuccess('Blog updated successfully!');
       handleCancel();  // Close the edit form after success
     } catch (err) {

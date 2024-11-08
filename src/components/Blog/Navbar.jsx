@@ -8,6 +8,8 @@ const Navbar = () => {
     const navigate = useNavigate();
     const user = useSelector(state => state.user.userData); // Access user data from Redux
 
+    const { isAuthenticated } = useSelector((state) => state.user);
+
     const handleLogout = async () => {
         try {
             await dispatch(logout()).unwrap(); // Call the logout action to update the state
@@ -26,9 +28,9 @@ const Navbar = () => {
                 </Link>
 
                 <div className="flex items-center space-x-4">
-                    {user ? (  // Check if user exists directly from Redux state
+                    {isAuthenticated ? (  // Check if user exists directly from Redux state
                         <>
-                            <span className="text-gray-600 font-medium">Welcome, {user.username}</span>
+                           
                             <Link
                                 to="/blogForm/"
                                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-300"

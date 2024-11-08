@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import api from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import ImageUpload from '../../utils/cloudinary';
+import useAxiosInstance from '../../services/axiosInstance';
 
 const BlogForm = () => {
     const [image, setImage] = useState(null);
     const [error, setError] = useState('');
 
+
     const navigate = useNavigate();
 
+    const axiosInstance = useAxiosInstance()
     // Formik form state and validation
     const formik = useFormik({
         initialValues: {
@@ -38,7 +40,7 @@ const BlogForm = () => {
                     formData.append('image', imageUrl);
                 }
 
-                await api.post(`api/blogs/`, formData);
+                await axiosInstance.post(`api/blogs/`, formData);
                 // Clear form on success
                 resetForm();
                 setImage(null);

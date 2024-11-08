@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import api from '../../services/api';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../redux/actions/userActions';
 import EditBlog from './EditBlog';
 import Navbar from './Navbar';
+import useAxiosInstance from '../../services/axiosInstance';
 
 const BlogDetail = () => {
     const [blog, setBlog] = useState(null);
@@ -14,11 +13,13 @@ const BlogDetail = () => {
     const { slug } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch()
+    const axiosInstance = useAxiosInstance()
   
     useEffect(() => {
       const fetchBlog = async () => {
+
         try {
-          const response = await api.get(`/api/blogs/${slug}/`);
+          const response = await axiosInstance.get(`/api/blogs/${slug}/`);
           setBlog(response.data);
         } catch (error) {
           setError('Error fetching blog');
@@ -41,7 +42,7 @@ const BlogDetail = () => {
             }
             if(window.confirm('Are you sure did you need to delete you post')){
 
-                await api.delete(`api/blogs/${slug}/`);
+                await axiosInstance.delete(`api/blogs/${slug}/`);
                 navigate('/')
             }
 

@@ -1,12 +1,16 @@
 import {createAsyncThunk, isRejectedWithValue} from '@reduxjs/toolkit'
 import axios from 'axios'
-import api, {URL} from "../../services/api"
+import  {URL} from "../../services/api"
 import { config, configMultiPart } from '../../Common/configurations'
 import { createContext, useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
+import useAxiosInstance from '../../services/axiosInstance';
 
 const userActions = createContext();
 export default userActions;
+
+
+
 
 // Thunk action to log out a user
 export const logout = createAsyncThunk(
@@ -30,7 +34,7 @@ export const logout = createAsyncThunk(
             };
 
             // Send the logout request with the refresh token in the body
-            console.log(refreshToken);
+
             
             const { data } = await axios.post(`${URL}/logout/`, { refresh: refreshToken }, config);
 
@@ -87,24 +91,55 @@ export const signUpUser = createAsyncThunk(
     }
 );
 
-export const userData = createAsyncThunk(
-    "user/userData",
+export const token_valid = createAsyncThunk(
+    'user/token_valid',
+    async (_, { rejectWithValue }) => {
+      try {
+        // Replace this URL with the actual endpoint to validate the token
+        const response = await axios.get('/api/auth/validate_token', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
+        });
+        return response.data;
+      } catch (error) {
+        return rejectWithValue('Invalid token');
+      }
+    }
+  );
+
+export const updateToken = createAsyncThunk(
+    "user/updateToken",
     async (_, { rejectWithValue }) => {
         try {
-            // Fetch user data
-            const { data } = await api.get('/api/user/');
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (!user || !user.refresh) {
+                throw new Error("No valid refresh token found.");
+            }
 
-            // Optionally store in localStorage
-            localStorage.setItem('userData', JSON.stringify(data));
+            const refreshToken = user.refresh;
+            console.log(refreshToken);
+            
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
 
-            // Return the data to be used in Redux state
-            return data;
+            // Sending the refresh token in the request body
+            const response = await axios.post(`${URL}/token/refresh/`, { refresh: refreshToken });
+            console.log(response);
+            
+            // Return the response data
+            return response.data;
         } catch (error) {
-            console.error("Error fetching user data:", error);
-
-            // Return a more informative error
-            return rejectWithValue(error.response?.data || 'Error fetching user data');
+            console.log(refreshToken);
+            
+            return rejectWithValue(error.response?.data || error.message);
         }
     }
 );
+
+
+
 

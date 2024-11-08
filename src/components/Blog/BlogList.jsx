@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { URL } from '../../services/api';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout, userData as fetchUserDataAction } from '../../redux/actions/userActions';
 import Navbar from './Navbar'; // Import the Navbar component
 
 const BlogList = () => {
@@ -31,29 +30,11 @@ const BlogList = () => {
             }
         };
 
-        const fetchUserData = async () => {
-            try {
-                await dispatch(fetchUserDataAction());
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            fetchUserData();
-        }
+       
+       
         fetchBlogs();
     }, [dispatch]);
 
-    const handleLogout = async () => {
-        try {
-            await dispatch(logout()).unwrap();
-            navigate('/login');
-        } catch (error) {
-            console.error('Logout failed:', error);
-            navigate('/login');
-        }
-    };
 
     // Get current blogs
     const indexOfLastBlog = currentPage * blogsPerPage;
